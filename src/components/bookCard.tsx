@@ -16,11 +16,11 @@ interface Book {
 }
 interface BookCardProps {
   HomeProps: string;
-  orderProps?: (bookId: any) => Promise<any>;
+  orderProps?: (bookId: number) => Promise<void>;
   disabled: boolean;
 }
 function BookCard({ HomeProps , orderProps}: BookCardProps) {
-const [books, setBooks] = useState([]);
+const [books, setBooks] = useState<Book[]>([]);
 
 useEffect(()=>{
  const fetchData = async() =>{
@@ -87,7 +87,7 @@ useEffect(()=>{
               {/* Button */}
               <Link href={HomeProps} >
               <Button
-                onClick={() => { orderProps && orderProps(book.id) } }
+                onClick={() => { if (orderProps) orderProps(book.id); }}
                 disabled={!book.available}
                 className={`
                   w-full mt-4 py-6 rounded-2xl font-medium text-base

@@ -25,36 +25,36 @@ export default CreateOrder
 
 // ................................Get orders 
 
-export async function getOrders(tokin: any) {
-  const response= await fetch("https://simple-books-api.glitch.me/orders",{
+export async function getOrders(tokin: string) {
+  const response = await fetch("https://simple-books-api.glitch.me/orders", {
     method: "GET",
     headers: {
       "Authorization": `Bearer ${tokin}`
     }
-   })
- if (response.ok === false){
-return ("Fieled to get orders")
- }
- const data = await response.json()
-return data;
- } 
+  });
+  if (response.ok === false) {
+    return ("Failed to get orders");
+  }
+  const data = await response.json();
+  return data;
+}
 
 
- // ................................Delete order
+// ................................Delete order
 
- export async function deleteOrder(orderId: any, tokin: any) {
-  const response= await fetch(`https://simple-books-api.glitch.me/orders/${orderId}`,{
+export async function deleteOrder(orderId: number, tokin: string) {
+  const response = await fetch(`https://simple-books-api.glitch.me/orders/${orderId}`, {
     method: "DELETE",
     headers: {
       "Authorization": `Bearer ${tokin}`
     }
-   })
- if (response.ok === false){
-return ("Failed to delete order")
- }else{
-  return ("Order deleted successfully")
- }
- }
+  });
+  if (response.ok === false) {
+    return ("Failed to delete order");
+  } else {
+    return ("Order deleted successfully");
+  }
+}
 
 
 

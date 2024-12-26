@@ -8,21 +8,9 @@ import { toast } from "react-toastify";
 import { ShoppingCart, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 
-interface OrderData {
-  token: any;
-  bookId: any;
-  clientName: any;
-}
-
-interface AuthData {
-  token: any;
-  clientName: any;
-}
-
 const OrderPage = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [orderData, setOrderData] = useState<OrderData | null>();
-  const [authData, setAuthData] = useState<AuthData>({ token: null, clientName: null});
+  const [authData, setAuthData] = useState<{ token: string | null; clientName: string | null }>({ token: null, clientName: null });
   const [isMounted, setIsMounted] = useState(false);
 
   // Initialize authentication data
@@ -34,7 +22,7 @@ const OrderPage = () => {
   }, []);
 
   // Handle order creation with useCallback
-  const createOrder = useCallback(async (token: any, bookId: any, clientName: any) => {
+  const createOrder = useCallback(async (token: string, bookId: number, clientName: string) => {
     try {
       const response = await CreateOrder(token, bookId, clientName);
       
@@ -72,7 +60,7 @@ const OrderPage = () => {
   }, []);
 
   // Handle order click with proper async handling
-  const handleOrderClick = useCallback(async (bookId: string) => {
+  const handleOrderClick = useCallback(async (bookId: number) => {
     const { token, clientName } = authData;
 
     if (!token || !clientName) {
@@ -86,10 +74,7 @@ const OrderPage = () => {
 
     setIsLoading(true);
     try {
-      const success = await createOrder(token, bookId, clientName);
-      if (success) {
-        setOrderData({ token, bookId, clientName });
-      }
+      await createOrder(token, bookId, clientName);
     } finally {
       setIsLoading(false);
     }

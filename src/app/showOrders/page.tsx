@@ -8,10 +8,17 @@ import { Package, Trash } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 const ShowOrders = () => {
-  const [orders, setOrders] = useState([])
+  const [orders, setOrders] = useState<{ id: number; bookId: number; name: string; customerName: string; price: number; quantity: number }[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [token, setToken] = useState('')
 
-  const token = window.localStorage.getItem("accessToken")
+  // Fetch orders
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const token = window.localStorage.getItem("accessToken") || ''
+      setToken(token)
+    }
+  }, [])
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -26,30 +33,32 @@ const ShowOrders = () => {
             theme: "colored",
           })
         }
-      } catch (error) {
+      } catch {
         toast.error("Error loading orders")
       } finally {
         setIsLoading(false)
       }
     }
-    fetchOrders()
-  }, [])
+    if (token) {
+      fetchOrders()
+    }
+  }, [token])
 
-  const deleteFunc = async(orderId: any) => {
+  const deleteFunc = async (orderId: number) => {
     try {
-      const data = await deleteOrder(token, orderId)
-      if(data !== "Order deleted successfully"){
+      const data = await deleteOrder(orderId, token)
+      if (data !== "Order deleted successfully") {
         toast.info("Order deleted successfully", {
           position: "top-center",
           autoClose: 200,
           theme: "colored",
         })
-        const updatedOrders = orders.filter((order: any) => order.id !== orderId)
+        const updatedOrders = orders.filter((order) => order.id !== orderId)
         setOrders(updatedOrders)
       } else {
         toast.error("Failed to delete order")
       }
-    } catch (error) {
+    } catch {
       toast.error("Error deleting order")
     }
   }
@@ -73,7 +82,7 @@ const ShowOrders = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {orders.map((book: any, index: number) => (
+          {orders.map((book, index) => (
             <Card 
               key={index} 
               className="bg-white overflow-hidden hover:shadow-md transition-shadow duration-200"
@@ -82,7 +91,7 @@ const ShowOrders = () => {
                 <div className="w-36 h-48 flex-shrink-0">
                   <div className="relative w-full h-full">
                     <Image
-                      src={`/book${book?.bookId || 'default'}.png`}
+                      src={`/book${book.bookId || 'default'}.png`}
                       alt={'Book cover'}
                       fill
                       className="object-cover rounded-lg"
@@ -95,31 +104,31 @@ const ShowOrders = () => {
                   <div className="space-y-3">
                     <div>
                       <h2 className="text-xl font-semibold text-gray-900">
-                         {book?.name}
+                         {book.name}
                       </h2>
                       <p className="text-sm text-gray-500 mt-1">
-                        Order #{book?.id || 'N/A'}
+                        Order #{book.id || 'N/A'}
                       </p>
                     </div>
                     
                     <div className="space-y-2">
                       <p className="text-gray-700">
-                        <span className="font-medium">Customer:</span> {book?.customerName || 'N/A'}
+                        <span className="font-medium">Customer:</span> {book.customerName || 'N/A'}
                       </p>
                       <p className="text-gray-700">
-                        <span className="font-medium">Book ID:</span> {book?.bookId || 'N/A'}
+                        <span className="font-medium">Book ID:</span> {book.bookId || 'N/A'}
                       </p>
                       <p className="text-green-600 font-semibold text-lg">
-                        ${typeof book?.price === 'number' ? book.price.toFixed(2) : '0.00'}
+                        ${typeof book.price === 'number' ? book.price.toFixed(2) : '0.00'}
                       </p>
                       <p className="text-blue-600">
-                        Quantity: {book?.quantity || 0}
+                        Quantity: {book.quantity || 0}
                       </p>
                   </div>
 
                   <div className="flex border-t border-red-500 border-opacity-50 border- justify-end pt-1">
                     <Button
-                      onClick={() => book?.id && deleteFunc(book.id)}
+                      onClick={() => book.id && deleteFunc(book.id)}
                       className="p-2 text-black bg-red-500 hover:bg-red-300 hover:text-gray-500 transition-colors duration-200"
                       aria-label="Delete order"
                     >
@@ -138,4 +147,12 @@ const ShowOrders = () => {
   )
 }
 
-export default ShowOrders
+const ShowOrdersPage = () => {
+  return (
+    <div>
+      <ShowOrders />
+    </div>
+  );
+};
+
+export default ShowOrdersPage;

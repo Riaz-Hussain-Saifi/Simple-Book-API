@@ -3,7 +3,6 @@
 import React from "react";
 import BookCard from "@/components/bookCard";
 import { Book } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 export default function Home() {
   return (
@@ -31,7 +30,10 @@ export default function Home() {
 
           <BookCard
             HomeProps="/register"
-            orderProps={async (bookId) => Promise.resolve()}
+            orderProps={async (bookId: number) => {
+              // Implement your order logic here
+              await Promise.resolve(`/order/${bookId}`);
+            }}
             disabled={false}
           />
         </div>
