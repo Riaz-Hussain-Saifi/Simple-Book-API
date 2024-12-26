@@ -12,7 +12,6 @@ const ShowOrders = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [token, setToken] = useState('')
 
-  // Fetch orders
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const token = window.localStorage.getItem("accessToken") || ''
@@ -76,23 +75,23 @@ const ShowOrders = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-50 p-4 sm:p-6 lg:p-8">
       <div className="max-w-7xl mx-auto">
-        <div className="flex items-center gap-3 mb-8">
+        <div className="flex flex-col sm:flex-row items-center gap-3 mb-6 sm:mb-8">
           <Package className="w-8 h-8 text-blue-600" />
-          <h1 className="text-3xl font-bold text-blue-600">
+          <h1 className="text-2xl sm:text-3xl font-bold text-blue-600 text-center sm:text-left">
             Your Orders
           </h1>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {orders.map((book, index) => (
             <Card 
               key={index} 
               className="bg-white overflow-hidden hover:shadow-md transition-shadow duration-200"
             >
-              <div className="flex gap-6 p-6">
-                <div className="w-36 h-48 flex-shrink-0">
+              <div className="flex flex-col sm:flex-row gap-4 p-4 sm:p-6">
+                <div className="w-full sm:w-32 h-40 sm:h-48 mx-auto sm:mx-0">
                   <div className="relative w-full h-full">
                     <Image
                       src={`/book${book.bookId || 'default'}.png`}
@@ -105,41 +104,40 @@ const ShowOrders = () => {
                 </div>
                 
                 <div className="flex flex-col flex-1 justify-between">
-                  <div className="space-y-3">
+                  <div className="space-y-2 sm:space-y-3">
                     <div>
-                      <h2 className="text-xl font-semibold text-gray-900">
-                         {book.name}
+                      <h2 className="text-lg sm:text-xl font-semibold text-gray-900 text-center sm:text-left">
+                        {book.name}
                       </h2>
-                      <p className="text-sm text-gray-500 mt-1">
+                      <p className="text-sm text-gray-500 mt-1 text-center sm:text-left">
                         Order #{book.id || 'N/A'}
                       </p>
                     </div>
                     
                     <div className="space-y-2">
-                      <p className="text-gray-700">
+                      <p className="text-gray-700 text-sm sm:text-base">
                         <span className="font-medium">Customer:</span> {book.customerName || 'N/A'}
                       </p>
-                      <p className="text-gray-700">
+                      <p className="text-gray-700 text-sm sm:text-base">
                         <span className="font-medium">Book ID:</span> {book.bookId || 'N/A'}
                       </p>
-                      <p className="text-green-600 font-semibold text-lg">
+                      <p className="text-green-600 font-semibold text-base sm:text-lg">
                         ${typeof book.price === 'number' ? book.price.toFixed(2) : '0.00'}
                       </p>
-                      <p className="text-blue-600">
+                      <p className="text-blue-600 text-sm sm:text-base">
                         Quantity: {book.quantity || 0}
                       </p>
-                  </div>
+                    </div>
 
-                  <div className="flex border-t border-red-500 border-opacity-50 border- justify-end pt-1">
-                    <Button
-                      onClick={() => book.id && deleteFunc(book.id)}
-                      className="p-2 text-black bg-red-500 hover:bg-red-300 hover:text-gray-500 transition-colors duration-200"
-                      aria-label="Delete order"
-                    >
-                      <Trash className=" w-5 h-5" />
-                    </Button>
-                  </div>
-                  
+                    <div className="flex border-t border-red-500 border-opacity-50 justify-end pt-2">
+                      <Button
+                        onClick={() => book.id && deleteFunc(book.id)}
+                        className="p-2 text-black bg-red-500 hover:bg-red-300 hover:text-gray-500 transition-colors duration-200"
+                        aria-label="Delete order"
+                      >
+                        <Trash className="w-4 h-4 sm:w-5 sm:h-5" />
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -156,7 +154,7 @@ const ShowOrdersPage = () => {
     <div>
       <ShowOrders />
     </div>
-  );
-};
+  )
+}
 
-export default ShowOrdersPage;
+export default ShowOrdersPage
