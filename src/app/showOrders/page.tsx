@@ -48,7 +48,7 @@ const ShowOrders = () => {
     try {
       const data = await deleteOrder(orderId, token)
       if (data !== "Order deleted successfully") {
-        toast.info("Order deleted successfully", {
+        toast.success("Order deleted successfully", {
           position: "top-center",
           autoClose: 200,
           theme: "colored",
@@ -56,7 +56,11 @@ const ShowOrders = () => {
         const updatedOrders = orders.filter((order) => order.id !== orderId)
         setOrders(updatedOrders)
       } else {
-        toast.error("Failed to delete order")
+        toast.info("Press delete again to delete order", {
+          position: "top-center",
+          autoClose: 200,
+          theme: "colored",
+        })
       }
     } catch {
       toast.error("Error deleting order")
